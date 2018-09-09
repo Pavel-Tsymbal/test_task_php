@@ -1,7 +1,7 @@
 <?php
 
 /**
- * function for getting connection with database
+ * function to connect to the database
  * @param array $config
  * @return PDO
  */
