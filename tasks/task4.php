@@ -27,7 +27,7 @@ function load_users_data(string $user_ids,PDO $db) :array
     $ids = explode(',', $user_ids);
     $sql = 'SELECT * FROM users WHERE id IN ('.str_repeat('?,', count($ids) - 1) . '?'.')';
     $sth = $db->prepare($sql);
-    $sth->execute();
+    $sth->execute($ids);
     $usersData = $sth->fetchAll(PDO::FETCH_OBJ);
 
     $data = [];
