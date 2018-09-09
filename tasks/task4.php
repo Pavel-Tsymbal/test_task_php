@@ -25,10 +25,9 @@ function connectDb(array $config) :PDO
 function load_users_data(string $user_ids,PDO $db) :array
 {
     $ids = explode(',', $user_ids);
-    $in  = str_repeat('?,', count($ids) - 1) . '?';
-    $sql = "SELECT * FROM users WHERE id IN ($in)";
+    $sql = 'SELECT * FROM users WHERE id IN ('.str_repeat('?,', count($ids) - 1) . '?'.')';
     $sth = $db->prepare($sql);
-    $sth->execute($ids);
+    $sth->execute();
     $usersData = $sth->fetchAll(PDO::FETCH_OBJ);
 
     $data = [];
@@ -55,7 +54,7 @@ if (!empty($_GET['user_ids'])) {
 }
 
 
-// 1) Оптимизация. Не за чем создавать соединение с базой чтобы получить каждый объект, мы можем получить все объекты одним запросом.
+// 1) Оптимизация. Не за чем для каждого объекта слать отдельный запрос, мы можем получить все объекты одним запросом.
 // 2) Вынес подключение к базе в отдельную функцию которая принимает конфигурацию.
-// 3) Уязвимость в запросе - из соображений безопасности мы должны передавать значения только через подстановки, для этого используем PDO.
+// 3) Через mysql_connect не стоит работать с базой, потому что можно допустить sql инъекции, лучше использовать PDO.
 
